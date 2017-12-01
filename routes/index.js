@@ -1,52 +1,52 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-var Candidate = mongoose.model('Candidates');
+var Items = mongoose.model('Items');
 
-router.get('/admin', function(req, res, next) {
-  var candidate = Candidate.find();
-  res.sendfile('public/admin.html');
+router.get('/administrator', function(req, res, next) {
+  var item = Items.find();
+  res.sendfile('public/administrator.html');
 });
 
-router.param('candidate', function(req, res, next, id) {
-  var query = Candidate.findById(id);
-  query.exec(function (err, candidate){
+router.param('item', function(req, res, next, id) {
+  var query = Items.findById(id);
+  query.exec(function (err, item){
     if (err) { return next(err); }
-    if (!candidate) { return next(new Error("can't find candidate")); }
-    req.candidate = candidate;
+    if (!item) { return next(new Error("can't find item")); }
+    req.item = item;
     return next();
   });
 });
 
-router.post('/voter', function(req, res, next) {
-  var candidate = new Candidate(req.body);
-  candidate.save(function (err, candidate) {
+router.post('/customer', function(req, res, next) {
+  var item = new Items(req.body);
+  item.save(function (err, item) {
     if (err) { return next(err); }
-    res.json(candidate);
+    res.json(item);
   });
 });
 
 /* GET home page. */
-router.get('/voter', function(req, res, next) {
-  Candidate.find(function (err, candidates) {
+router.get('/customer', function(req, res, next) {
+  Items.find(function (err, item) {
     if (err) { return next(err); }
-    res.json(candidates);
+    res.json(item);
   });
 });
 
-router.get('/voter/:candidate', function (req, res, next) {
-  res.json(req.candidate);
+router.get('/customer/:item', function (req, res, next) {
+  res.json(req.item);
 });
 
-router.put('/voter/:candidate/vote', function(req, res, next) {
-  req.candidate.vote(function(err, candidate){
+router.put('/customer/:item/order', function(req, res, next) {
+  req.item.order(function(err, item){
     if (err) { return next(err); }
-    res.json(candidate);
+    res.json(item);
   });
 });
 
-router.delete('/voter/:candidate', function(req, res, next) {
-  Candidate.remove({'_id': req.candidate._id}, function (err) {
+router.delete('/customer/:item', function(req, res, next) {
+  Items.remove({'_id': req.item._id}, function (err) {
     if (err) { console.error(err); }
     res.sendStatus(204);
   });

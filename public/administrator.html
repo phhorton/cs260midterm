@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>Shopping Interface</title>
+  <title>Store Management Interface</title>
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
   <script src="javascripts/app.js"></script>
@@ -14,21 +14,21 @@
   <h1>Current Products</h1>
 </div>
 
+  <form ng-submit="addItem()" style = "margin-top30px;">
+    Product Name: <input type="text" ng-model="itemName"></input>
+    Price: <input type="text" ng-model="itemPrice"></input>
+    Picture URL: <input type="text" ng-model="itemPict"></input>
+    <button type="submit">Add Product</button>
+  </form>
   <div>
     {{test}}
   </div>
   <div ng-repeat="item in allSelected | orderBy: 'name'">
-    <input type="checkbox" ng-model="item.selected">
-    {{item.name}} - price {{item.price}}
+    <span class="glyphicon glyphicon-remove" ng-click="delete(item)"></span>
+    {{item.name}} - price {{item.price}} - ordered {{item.ordered}}
     <img ng-src="{{item.pict}}">
   </div>
-  <button type="button" ng-click="order()">Submit Purchase</button>
 </div>
-  <h1>Shopping Cart</h1>
-  <div ng-repeat="item in orderedItems | orderBy: 'name'">
-    {{item.name}} - price {{item.price}}
-    <img ng-src="{{item.pict}}">
-  </div>
 </div>
 </body>
 </html>

@@ -1,53 +1,58 @@
-angular.module('candidate', [])
+angular.module('item', [])
 .controller('MainCtrl', [
   '$scope','$http',
   function($scope,$http){
-    $scope.ballot = [];
-    $scope.candidates = [];
-    $scope.addCandidate = function() {
-      if($scope.formContent === '') { return; }
-        console.log("In addCandidate with "+$scope.formContent);
+    $scope.orderedItems = [];
+    $scope.allSelected = [];
+    $scope.addItem = function() {
+      if($scope.itemName === '' || $scope.itemPrice === '' || $scope.itemPict === '') { return; }
+        console.log("In addItem with "+$scope.itemName);
         $scope.create({
-          name: $scope.formContent,
-          votes: 0,
+          name: $scope.itemName,
+          price: $scope.itemPrice,
+          ordered: 0,
+	  pict: $scope.itemPict
         });
-        $scope.formContent = '';
+        $scope.itemName = '';
+	$scope.itemPrice = '';
+	$scope.itemPict = '';
       };
-    $scope.vote = function() {
-      angular.forEach($scope.candidates, function (val, key) {
+    $scope.order = function() {
+      $scope.orderedItems = [];
+      angular.forEach($scope.allSelected, function (val, key) {
         if (val.selected) {
-          $scope.doVote(val);
-          $scope.ballot.push(val);
+          $scope.doOrder(val);
+          $scope.orderedItems.push(val);
         }
       });
     };
 
-    $scope.doVote = function (candidate) {
-      return $http.put('/voter/' + candidate._id + '/vote')
+    $scope.doOrder = function (item) {
+      return $http.put('/customer/' + item._id + '/order')
             .success(function(data){
-              console.log("vote worked");
-              candidate.votes += 1;
+              console.log("order worked");
+              item.ordered += 1;
             });
     }
 
-    $scope.getAllVotes = function() {
-      return $http.get('/voter').success(function(data){
-        angular.copy(data, $scope.candidates);
+    $scope.getAll = function() {
+      return $http.get('/customer').success(function(data){
+        angular.copy(data, $scope.allSelected);
       });
     };
-    $scope.getAllVotes();
+    $scope.getAll();
 
-    $scope.create = function(candidate) {
-      return $http.post('/voter', candidate).success(function(data){
-        $scope.candidates.push(data);
+    $scope.create = function(item) {
+      return $http.post('/customer', item).success(function(data){
+        $scope.allSelected.push(data);
       });
     };
-    $scope.delete = function(candidate) {
-      $http.delete('/voter/' + candidate._id )
+    $scope.delete = function(item) {
+      $http.delete('/customer/' + item._id )
         .success(function(data){
           console.log("delete worked");
         });
-      $scope.getAllVotes();
+      $scope.getAll();
     };
   }
 ]);

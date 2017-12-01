@@ -5,8 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/candidateDB',{useMongoClient:true});
-require('./models/Candidates');
+mongoose.connect('mongodb://localhost/shoppingDB',{useMongoClient:true});
+require('./models/Items');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
